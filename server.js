@@ -10,25 +10,27 @@ app.get('/', (req, res) => {
 
 app.get('/api/:date?', (req, res) => {
   const { date } = req.params;
-  let parsedDate;
+
+  let dateObj;
 
   if (!date) {
-    parsedDate = new Date();
-  } else if (/^\d+$/.test(date)) {
-    parsedDate = new Date(parseInt(date));
+    dateObj = new Date();
+  } else if (!isNaN(date)) {
+    dateObj = new Date(parseInt(date));
   } else {
-    parsedDate = new Date(date);
+    dateObj = new Date(date);
   }
 
-  if (parsedDate.toString() === 'Invalid Date') {
-    return res.json({ error: 'Invalid Date' });
+  if (dateObj.toString() === "Invalid Date") {
+    return res.json({ error: "Invalid Date" });
   }
 
-  res.json({
-    unix: parsedDate.getTime(),
-    utc: parsedDate.toUTCString()
+  return res.json({
+    unix: dateObj.getTime(),
+    utc: dateObj.toUTCString()
   });
 });
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
