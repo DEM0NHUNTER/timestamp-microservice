@@ -1,23 +1,47 @@
-const express = require("express");
+const express = require('express');
+const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.get("/api/:date?", (req, res) => {
-  const { date } = req.params;
-  let parsedDate = date ? new Date(date) : new Date();
+// Enable CORS for testing and cross-origin
+app.use(cors());
 
-  // Handle invalid dates
-  if (date && isNaN(parsedDate.getTime())) {
-    return res.json({ error: "Invalid Date" });
+// Static files
+app.use(express.static('public'));
+
+// Root HTML page
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/views/index.html');
+});
+
+// API endpoint
+app.get('/api/:date?', (req, res) => {
+  let dateInput = req.params.date;
+
+  // Handle empty parameter — use current date
+  let date;
+  if (!dateInput) {
+    date = new Date();
+  } else if (!isNaN(dateInput)) {
+    // Check for Unix timestamp (milliseconds)
+    date = new Date(parseInt(dateInput));
+  } else {
+    // Try to parse natural date string
+    date = new Date(dateInput);
   }
 
-  // Return Unix timestamp and UTC string
+  // Validate date
+  if (date.toString() === 'Invalid Date') {
+    return res.json({ error: 'Invalid Date' });
+  }
+
   res.json({
-    unix: parsedDate.getTime(),
-    utc: parsedDate.toUTCString()
+    unix: date.getTime(),
+    utc: date.toUTCString()
   });
 });
 
+// Listen on port
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

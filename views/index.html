@@ -1,23 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Timestamp Microservice</title>
-  <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-  <h1>Timestamp Microservice</h1>
-  <p>Enter a date or Unix timestamp:</p>
-  <input id="dateInput" type="text">
-  <button onclick="fetchData()">Submit</button>
-  <pre id="response"></pre>
-
-  <script>
-    async function fetchData() {
-      const input = document.getElementById("dateInput").value;
-      const response = await fetch(`/api/${input}`);
-      const data = await response.json();
-      document.getElementById("response").textContent = JSON.stringify(data, null, 2);
-    }
-  </script>
-</body>
+  <head>
+    <title>Timestamp Microservice</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1>Timestamp Microservice</h1>
+    <p>Try accessing <code>/api/</code> or <code>/api/2015-12-25</code></p>
+  </body>
 </html>
